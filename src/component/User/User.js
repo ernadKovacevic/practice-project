@@ -2,6 +2,8 @@ import './User.css';
 import Card from '../Card/Card.js';
 import { useState } from 'react';
 
+let id = 4;
+
 const User = () => {
   const [userName, setUserName] = useState('');
   const [age, setAge] = useState('');
@@ -21,6 +23,12 @@ const User = () => {
       return;
     }
 
+    const newUser = {
+      id,
+      userName,
+      age,
+    };
+    id++;
     event.target.reset();
   };
 
