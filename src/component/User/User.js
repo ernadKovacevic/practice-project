@@ -1,12 +1,14 @@
 import './User.css';
 import Card from '../Card/Card.js';
 import { useState } from 'react';
+import ErrorModal from '../ErrorModal/ErrorModal';
 
 let id = 4;
 
-const User = () => {
+const User = (props) => {
   const [userName, setUserName] = useState('');
   const [age, setAge] = useState('');
+  let error = undefined;
 
   const onChangeUserName = (event) => {
     setUserName(event.target.value.trim());
@@ -18,18 +20,37 @@ const User = () => {
 
   const addUser = (event) => {
     event.preventDefault();
+    console.log('1');
     if (userName === '' || age === '') {
-      alert('Form not valid please insert all fields');
-      return;
+      console.log('21');
+      error = {
+        title: 'Invalid input',
+        message: 'One or both field/fields is empty',
+      };
+      // props.errors(error);
+    } else if (+age < 1) {
+      error = {
+        title: 'Invalid age',
+        message: 'Age must be greater then 1',
+      };
+      // props.errors(error);
+    } else {
+      const newUser = {
+        id,
+        userName,
+        age: +age,
+      };
+      error = undefined;
+      console.log('3');
+      props.addNewUser(newUser);
+      id++;
     }
 
-    const newUser = {
-      id,
-      userName,
-      age,
-    };
-    id++;
+    props.errors(error);
+    console.log('4');
     event.target.reset();
+    setAge('');
+    setUserName('');
   };
 
   return (

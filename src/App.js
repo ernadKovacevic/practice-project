@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import User from './component/User/User';
 import ListUsers from './component/ListUsers/ListUsers';
+import ErrorModal from './component/ErrorModal/ErrorModal';
 
 const DUMMY_USERS = [
   {
@@ -21,12 +22,32 @@ const DUMMY_USERS = [
 ];
 
 function App() {
+  const [users, setUsers] = useState(DUMMY_USERS);
+  const [error, setError] = useState();
+
+  const onNewUserHandler = (newUser) => {
+    setUsers((prevUsers) => {
+      return [newUser, ...prevUsers];
+    });
+  };
+
+  const onErrorHandler = (newError) => {
+    setError(newError);
+  };
+
   return (
     <div
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
-      <User />
-      <ListUsers users={DUMMY_USERS} />
+      {error && (
+        <ErrorModal
+          title={error.title}
+          message={error.message}
+          close={onErrorHandler}
+        />
+      )}
+      <User addNewUser={onNewUserHandler} errors={onErrorHandler} />
+      <ListUsers users={users} />
     </div>
   );
 }
